@@ -2,4 +2,4 @@
 se fosse o BD que fizesse esse calculo teria que enviar para o back-end e assim enviar para o front
 
 back end requisita criação de um novo pedido ao BD, envia os itens do pedido para a tabela ItensDePedidos,
-após enviar todos os itens, back end calcula preço total
+após enviar todos os itens, back end calcula preço total a
