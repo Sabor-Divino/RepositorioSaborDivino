@@ -4,14 +4,13 @@ after insert, update, delete
 as
 begin
 	declare @acao varchar(10)
-	set @acao = 'inserÁ„o'
-
+	set @acao = 'inser√ß√£o'
 	if exists(select * from deleted)
 	begin
 		if exists(select * from inserted)
-		set @acao = 'alteraÁ„o'
+			set @acao = 'altera√ß√£o'
 		else
-		set @acao = 'remoÁ„o'
+			set @acao = 'remo√ß√£o'
 	end
 	
 	declare @linhas int
@@ -29,7 +28,7 @@ begin
 	if exists(select * from deleted d
 			  inner join SabDiv.Pedidos p on d.IdCliente = p.IdCliente)
 	begin
-	THROW 50000, 'Cliente n„o pode ser excluÌdo pois h· registros desse cliente', 1
+	THROW 50000, 'Cliente n√£o pode ser exclu√≠do pois h√° registros desse cliente', 1
 	end
 
 	else
@@ -37,7 +36,7 @@ begin
 	delete from SabDiv.Clientes
 	where idCliente in (select IdCliente from deleted)
 	end
-end
+end;
 
 create trigger SabDiv.trRestricaoIntegridadeItensDeCardapios
 on SabDiv.ItensDeCardapios

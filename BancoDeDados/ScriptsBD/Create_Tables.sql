@@ -3,14 +3,14 @@ create schema SabDiv
 create table SabDiv.Clientes(
 	IdCliente int identity(1,1) primary key,
 	NomeUsuario varchar(100) unique not null,
-	Senha varbinary(80) not null
+	Senha varchar(30) not null
 )
 
 create table SabDiv.EnderecosClientes(
 	IdEndereco int identity(1,1) primary key,
 	IdCliente int foreign key (idCliente) references SabDiv.Clientes(IdCliente),
 	Endereco varchar(200) not null,
-	CEP char(8) CHECK (CEP like '[0-9][0-9][0-9][0-9][0-9]-[0-9][0-9]')
+	CEP char(8) CHECK (CEP like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]')
 )
 
 create table SabDiv.AuditoriaItensDeCardapios(
@@ -38,7 +38,7 @@ create table SabDiv.MetodosDePagamento(
 	Metodo varchar(30) not null
 )
 
-create drop table SabDiv.Pedidos(
+create table SabDiv.Pedidos(
 	IdPedido int identity(1,1) primary key,
 	IdCliente int foreign key (idCliente) references SabDiv.Clientes(IdCliente),
 	IdMetodoPagamento int foreign key (IdMetodoPagamento) references SabDiv.MetodosDePagamento(IdMetodoPagamento),
@@ -46,19 +46,9 @@ create drop table SabDiv.Pedidos(
 	PrecoTotal decimal(10,2)
 )
 
-create drop table SabDiv.ItensDePedidos(
+create table SabDiv.ItensDePedidos(
 	IdItemPedido int identity(1,1) primary key,
 	IdPedido int foreign key (IdPedido) references SabDiv.Pedidos(IdPedido),
 	IdItemDeCardapio int foreign key (IdItemDeCardapio) references SabDiv.ItensDeCardapios(IdItemDeCardapio),
 	Quantidade int not null
 )
-
-
-drop table SabDiv.AuditoriaItensDeCardapios
-drop table SabDiv.ItensDePedidos
-drop table SabDiv.ItensDeCardapios
-drop table SabDiv.Cardapios
-drop table SabDiv.Pedidos
-drop table SabDiv.MetodosDePagamento
-drop table SabDiv.EnderecosClientes
-drop table SabDiv.Clientes
