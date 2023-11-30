@@ -47,8 +47,7 @@ begin
 				where IdItemDeCardapio in (select IdItemDeCardapio from deleted))
 	begin
 		update SabDiv.ItensDeCardapios
-		set NomeItem = '
-		'
+		set NomeItem = 'Indisponível'
 		where IdItemDeCardapio in (select IdItemDeCardapio from deleted)
 	end
 	else
