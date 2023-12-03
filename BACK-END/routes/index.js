@@ -13,10 +13,10 @@ router.get('/inserir-cliente', async (req, res) => { // http://localhost:3000/in
       return res.status(400).json({ mensagem: 'Nome de usuário e senha são obrigatórios' });
     }
     const resultado = await sqlClientes.inserirCliente(nomeUsuario, senha);
-    res.status(201).json(resultado);
+    res.status(201).json({ mensagem: 'Cliente inserido com sucesso' });
   } catch (erro) {
     console.error(erro);
-    res.status(500).json({ mensagem: 'Erro no servidor ao inserir cliente' });
+    res.status(500).json({ mensagem: 'Erro ao inserir cliente' });
   }
 });
 
