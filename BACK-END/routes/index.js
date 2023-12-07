@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 const sqlCardapiosEitens = require("../dbCardapiosEitens")
 const sqlClientes = require("../dbClientes")
-// const { inserirCliente } = require('../dbClientes');
-// const { validarLogin } = require('../dbClientes');
 
 
 router.get('/inserir-cliente', async (req, res) => { // http://localhost:3000/inserir-cliente?nomeUsuario=A&senha=A
@@ -37,26 +35,6 @@ router.get('/validar-login', async (req, res) => { // http://localhost:3000/vali
       res.status(500).json({ mensagem: 'Erro no servidor' });
     }
 });
-
-// inserirCliente('testezzz', 234256)
-//   .then((result) => {
-//     console.log("Cliente inserido com sucesso");
-//   })
-//   .catch((error) => {
-//   console.error("Erro ao inserir cliente");
-// });
-
-// validarLogin('Usuario1', 'Senha1')
-//   .then((resultado) => {
-//     if (resultado) {
-//       console.log("Cliente válido");
-//     } else {
-//       console.error("Cliente inválido");
-//     }
-//   })
-//   .catch((erro) => {
-//     console.error("Ocorreu um erro:");
-//   });
 
 router.get("/selectLanches", function(req, res, next){ // http://localhost:3000/selectLanches
   sqlCardapiosEitens.selectLanches().then((result) =>{
