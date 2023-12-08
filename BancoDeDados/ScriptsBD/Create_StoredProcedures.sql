@@ -14,6 +14,27 @@ begin
 end;
 
 
+create or alter procedure SabDiv.inserirEnderecoCliente
+	@nomeUsuario varchar(100),
+	@Endereco varchar(200),
+	@CEP char(8)
+as
+begin
+	declare @idCliente int
+
+	select @idCliente = IdCliente from SabDiv.Clientes where NomeUsuario = @nomeUsuario
+	
+	insert into SabDiv.EnderecosClientes(idCliente, Endereco, CEP)
+	values (@idCliente, @Endereco, @CEP)
+	if @@error <> 0
+	begin
+			declare @Mensagem nvarchar(2000)
+			Select @Mensagem = Error_Message()
+			Raiserror('Erro na inclusão desse endereço: %s', @Mensagem, 16, 1)
+	end
+end;
+
+
 create or alter procedure SabDiv.HistoricoPedidosCliente
     @nomeUsuario varchar(100)
 as
