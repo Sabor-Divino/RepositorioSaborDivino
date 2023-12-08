@@ -7,7 +7,7 @@ const sqlCardapiosEitens = require("../dbCardapiosEitens")
 const sqlClientes = require("../dbClientes")
 
 
-//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "A", "senha": "A"}' http://localhost:3000/inserir-cliente
+//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "senha": ""}' http://localhost:3000/inserir-cliente
 router.post('/inserir-cliente', async (req, res) => { 
   const { nomeUsuario, senha } = req.body;
   try {
@@ -22,7 +22,7 @@ router.post('/inserir-cliente', async (req, res) => {
   }
 });
 
-//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "A", "senha": "A"}' http://localhost:3000/validar-login
+//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "senha": ""}' http://localhost:3000/validar-login
 router.post('/validar-login', async (req, res) => {
   const { nomeUsuario, senha } = req.body; 
   try {
@@ -41,7 +41,7 @@ router.post('/validar-login', async (req, res) => {
   }
 });
 
-//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "A", "metodoPagamento": "A"}' http://localhost:3000/inserir-pedido
+//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "metodoPagamento": ""}' http://localhost:3000/inserir-pedido
 router.post('/inserir-pedido', async (req, res) => {
   const { nomeUsuario, metodoPagamento } = req.body;
 
