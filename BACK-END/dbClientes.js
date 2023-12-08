@@ -1,126 +1,133 @@
-var config = require("./dbconfig")
+const config = require("./dbconfig")
 const sql = require("mssql");
 
 async function inserirCliente(nomeUsuario, senha) {
+    let pool;
     try {
-        let pool = await sql.connect(config);
-        let result = await pool.request()
+    pool = await sql.connect(config);
+    await pool.request()
             .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
             .input('senha', sql.VarChar(30), senha)
             .execute('SabDiv.inserirCliente');
-        return result.recordset;
     } catch (error) {
         console.error("Erro ao inserir cliente: " + error.message);
         throw error;
+    } finally {
+        if (pool) {
+        await pool.close();
+      }
     }
 }
 
 async function validarLogin(usuario, senha) {
+    let pool;
     try {
-        await sql.connect(config);
+        pool = await sql.connect(config);
         const result = await sql.query`SELECT * FROM SabDiv.Clientes WHERE NomeUsuario = ${usuario} AND Senha = ${senha}`;
         if (result.recordset.length > 0) {
             return true;
         } else {
             return false;
         }
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error(error);
         return false;
-    } finally {
-      await sql.close();
+      } finally {
+        if (pool) {
+        await pool.close();
+      }
     }
 }
 
 async function inserirEnderecoCliente(nomeUsuario, Endereco, CEP) {
+  let pool;
   try {
-      let pool = await sql.connect(config);
-      let result = await pool.request()
+      pool = await sql.connect(config);
+      await pool.request()
           .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
           .input('Endereco', sql.VarChar(200), Endereco)
           .input('CEP', sql.Char(8), CEP)
           .execute('SabDiv.inserirEnderecoCliente');
-      return result.recordset;
   } catch (error) {
       console.error("Erro ao inserir endereço: " + error.message);
       throw error;
+  } finally {
+      if (pool) {
+      await pool.close();
+    }
   }
 }
 
 async function obterHistoricoPedidos(nomeUsuario) {
+  let pool;
     try {
-        await sql.connect(config);
-        const resultado = await sql.query`EXEC SabDiv.HistoricoPedidosCliente @nomeUsuario = ${nomeUsuario}`;
-        return resultado.recordset;
-    } catch (err) {
-        console.error(err);
-        throw err;
+        pool = await sql.connect(config);
+        const result = await pool.query`EXEC SabDiv.HistoricoPedidosCliente @nomeUsuario = ${nomeUsuario}`;
+        return result.recordset;
+    } catch (error) {
+        console.error(error);
+        throw error;
     } finally {
-        await sql.close();
+    if (pool) {
+      await sql.close();
     }
+  }
 }
 
 async function inserirPedido(nomeUsuario, metodoPagamento) {
+  let pool;
     try {
-      let pool = await sql.connect(config);
-  
-      // Inserir pedido usando stored procedure
-      let result = await pool.request()
+      pool = await sql.connect(config);
+      await pool.request()
         .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
         .input('metodoPagamento', sql.VarChar(30), metodoPagamento)
         .execute('SabDiv.inserirPedido');
-  
-      return result.recordset;
     } catch (error) {
       console.error("Erro ao inserir pedido: " + error.message);
       throw error;
     } finally {
-      await sql.close();
+      if (pool) {
+      await pool.close();
     }
+  }
 }
 
 async function inserirItemPedido(nomeUsuario, nomeItem, quantidade) {
+    let pool;
     try {
-      let pool = await sql.connect(config);
-  
-      let result = await pool.request()
+      pool = await sql.connect(config);
+      await pool.request()
         .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
         .input('nomeItem', sql.VarChar(40), nomeItem)
         .input('quantidade', sql.Int, quantidade)
         .execute('SabDiv.inserirItensDePedidos');
-  
-      console.log('Stored procedure executada com sucesso: InserirItensDePedidos');
-  
     } catch (error) {
-      console.error('Erro ao chamar a stored procedure: ' + error.message);
+      console.error("Erro ao inserir item de pedido: " + error.message);
       throw error;
     } finally {
-      await sql.close();
+      if (pool) {
+      await pool.close();
     }
   }
+}
   
   async function calcularEinserirPrecoTotal(nomeUsuario) {
+    let pool;
     try {
-      if (!nomeUsuario) {
-        throw new Error('Nome de usuário é obrigatório');
-      }
-  
-      let pool = await sql.connect(config);
-
-      let result = await pool.request()
+      pool = await sql.connect(config);
+      await pool.request()
         .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
         .execute('SabDiv.calcularEinserirPrecoTotal');
-  
-      return result.recordset;
     } catch (error) {
-      console.error('Erro ao chamar a stored procedure: ' + error.message);
+      console.error("Erro ao inserir preço total: " + error.message);
       throw error;
     } finally {
-      await sql.close();
+      if (pool) {
+      await pool.close();
     }
   }
+}
   
-
 
 module.exports = {
     inserirCliente: inserirCliente,
@@ -131,4 +138,3 @@ module.exports = {
     inserirItemPedido: inserirItemPedido,
     calcularEinserirPrecoTotal: calcularEinserirPrecoTotal
 }
-
