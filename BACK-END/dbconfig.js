@@ -1,5 +1,3 @@
-const sql = require('mssql');
-
 const config = {
   user: 'BD23331',
   password: 'BD23331',
