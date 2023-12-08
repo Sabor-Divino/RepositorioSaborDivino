@@ -11,9 +11,4 @@ const config = {
   },
 };
 
-sql.connect(config).then(pool => {
-    console.log("conectado")
-});
-
-
 module.exports = config;
