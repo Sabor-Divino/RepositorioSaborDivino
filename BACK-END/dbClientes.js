@@ -125,6 +125,7 @@ async function inserirItemPedido(nomeUsuario, nomeItem, quantidade) {
 module.exports = {
     inserirCliente: inserirCliente,
     validarLogin: validarLogin,
+    inserirEnderecoCliente: inserirEnderecoCliente,
     obterHistoricoPedidos: obterHistoricoPedidos,
     inserirPedido: inserirPedido,
     inserirItemPedido: inserirItemPedido,
