@@ -32,6 +32,21 @@ async function validarLogin(usuario, senha) {
     }
 }
 
+async function inserirEnderecoCliente(nomeUsuario, Endereco, CEP) {
+  try {
+      let pool = await sql.connect(config);
+      let result = await pool.request()
+          .input('nomeUsuario', sql.VarChar(100), nomeUsuario)
+          .input('Endereco', sql.VarChar(200), Endereco)
+          .input('CEP', sql.Char(8), CEP)
+          .execute('SabDiv.inserirEnderecoCliente');
+      return result.recordset;
+  } catch (error) {
+      console.error("Erro ao inserir endereço: " + error.message);
+      throw error;
+  }
+}
+
 async function obterHistoricoPedidos(nomeUsuario) {
     try {
         await sql.connect(config);
