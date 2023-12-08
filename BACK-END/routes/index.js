@@ -41,6 +41,21 @@ router.post('/validar-login', async (req, res) => {
   }
 });
 
+//curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "Endereco": "", "CEP": ""}' http://localhost:3000/inserir-endereco-cliente
+router.post('/inserir-endereco-cliente', async (req, res) => { 
+  const { nomeUsuario, Endereco, CEP } = req.body;
+  try {
+    if (!nomeUsuario || !Endereco || !CEP) {
+      return res.status(400).json({ mensagem: 'Nome de usuário, endereço e CEP são obrigatórios' });
+    }
+    const resultado = await sqlClientes.inserirEnderecoCliente(nomeUsuario, Endereco, CEP);
+    res.status(201).json({ mensagem: 'Endereço inserido com sucesso' });
+  } catch (erro) {
+    console.error(erro);
+    res.status(500).json({ mensagem: 'Erro ao inserir endereço' });
+  }
+});
+
 //curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "metodoPagamento": ""}' http://localhost:3000/inserir-pedido
 router.post('/inserir-pedido', async (req, res) => {
   const { nomeUsuario, metodoPagamento } = req.body;
