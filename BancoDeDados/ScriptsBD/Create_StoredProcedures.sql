@@ -23,14 +23,20 @@ begin
 	declare @idCliente int
 
 	select @idCliente = IdCliente from SabDiv.Clientes where NomeUsuario = @nomeUsuario
-	
-	insert into SabDiv.EnderecosClientes(idCliente, Endereco, CEP)
-	values (@idCliente, @Endereco, @CEP)
-	if @@error <> 0
+	if @idCliente <> 0
 	begin
-			declare @Mensagem nvarchar(2000)
-			Select @Mensagem = Error_Message()
-			Raiserror('Erro na inclusão desse endereço: %s', @Mensagem, 16, 1)
+		insert into SabDiv.EnderecosClientes(idCliente, Endereco, CEP)
+		values (@idCliente, @Endereco, @CEP)
+		if @@error <> 0
+		begin
+				declare @Mensagem nvarchar(2000)
+				Select @Mensagem = Error_Message()
+				Raiserror('Erro na inclusão desse endereço: %s', @Mensagem, 16, 1)
+		end
+	end
+	else
+	begin
+		THROW 51000, 'Cliente não encontrado.', 1;
 	end
 end;
 
@@ -57,7 +63,7 @@ begin
 end;
 
 
-create procedure SabDiv.inserirPedido
+create or alter procedure SabDiv.inserirPedido
 	@nomeUsuario varchar(100),
 	@metodoPagamento varchar(30)
 as
@@ -68,14 +74,20 @@ begin
 
 	select @idCliente = idCliente from SabDiv.Clientes where NomeUsuario = @nomeUsuario
 	select @idMetodo = idMetodoPagamento from SabDiv.MetodosDePagamento where Metodo = @metodoPagamento
-
-	insert into SabDiv.Pedidos (IdCliente, IdMetodoPagamento, DataEhora)
-	values (@idCliente, @idMetodo, @dataEhora)
-	if @@error <> 0
+	if @idCliente <> 0 and @idMetodo <> 0
 	begin
+		insert into SabDiv.Pedidos (IdCliente, IdMetodoPagamento, DataEhora)
+		values (@idCliente, @idMetodo, @dataEhora)
+		if @@error <> 0
+		begin
 			declare @Mensagem nvarchar(2000)
 			Select @Mensagem = Error_Message()
 			Raiserror('Erro na inclusão desse pedido: %s', @Mensagem, 16, 1)
+		end
+	end
+	else
+	begin
+				THROW 51000, 'Cliente ou metodo de pagamento não encontrado.', 1;
 	end
 end;
 
@@ -86,33 +98,26 @@ create or alter procedure SabDiv.inserirItensDePedidos
 as
 begin
 	declare @idCliente int
+	declare @idItem int
     select @idCliente = IdCliente from SabDiv.Clientes where NomeUsuario = @nomeUsuario
-	if @idCliente <> 0
+	select @idItem = IdItemDeCardapio from SabDiv.ItensDeCardapios where NomeItem = @nomeItem
+	if @idCliente <> 0 and @idItem <> 0 and @quantidade > 0
 	begin
-		declare @idItem int
 		select @idItem = IdItemDeCardapio from SabDiv.ItensDeCardapios where NomeItem = @nomeItem
-		if @idItem <> 0
-		begin
-			declare @ultimoIdPedido int
-			select @ultimoIdPedido = max(IdPedido)
-			FROM SabDiv.Pedidos
-			WHERE IdCliente = @idCliente;
+		declare @ultimoIdPedido int
+		select @ultimoIdPedido = max(IdPedido)
+		FROM SabDiv.Pedidos
+		WHERE IdCliente = @idCliente;
 
-			insert into SabDiv.ItensDePedidos (IdPedido, IdItemDeCardapio, Quantidade)
-			values(@ultimoIdPedido, @idItem, @quantidade)
-			print'Item inserido ao pedido'
-		end
-		else
-		begin
-			THROW 51000, 'O item de cardápio não foi encontrado.', 1;
-		end
+		insert into SabDiv.ItensDePedidos (IdPedido, IdItemDeCardapio, Quantidade)
+		values(@ultimoIdPedido, @idItem, @quantidade)
+		print'Item inserido ao pedido'
 	end
 	else
 	begin
-		 THROW 51000, 'Cliente não encontrado.', 1;
+		 THROW 51000, 'Quantidade inválida, ou Cliente ou item não encontrado.', 1;
 	end
-end
-
+end;
 
 create or alter procedure SabDiv.calcularEinserirPrecoTotal
 	@nomeUsuario varchar(100)
