@@ -1,7 +1,6 @@
 const config = require("./dbconfig")
 const sql = require("mssql");
-then
-//http://localhost:3000/selectLanches
+
 async function selectLanches(){
     let pool;
     try{
