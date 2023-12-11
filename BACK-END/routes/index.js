@@ -59,7 +59,6 @@ router.post('/inserir-endereco-cliente', async (req, res) => {
 // curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "metodoPagamento": ""}' http://localhost:3000/inserir-pedido
 router.post('/inserir-pedido', async (req, res) => {
   const { nomeUsuario, metodoPagamento } = req.body;
-
   try {
     if (!nomeUsuario || !metodoPagamento) {
       return res.status(400).json({ mensagem: 'Nome de usuário e método de pagamento são obrigatórios' });
@@ -75,7 +74,6 @@ router.post('/inserir-pedido', async (req, res) => {
 // curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": "", "metodoPagamento": "", nomeItem = "", quantidade = ""}' http://localhost:3000/inserir-item-pedido
 router.post('/inserir-item-pedido', async (req, res) => {
   const { nomeUsuario, nomeItem, quantidade } = req.body;
-
   try {
     if (!nomeUsuario || !nomeItem || !quantidade) {
       return res.status(400).json({ mensagem: 'Nome de usuário, nome do item e quantidade são obrigatórios' });
@@ -91,13 +89,11 @@ router.post('/inserir-item-pedido', async (req, res) => {
 // curl -X POST -H "Content-Type: application/json" -d '{"nomeUsuario": ""}' http://localhost:3000/calcular-e-inserir-preco-total
 router.post('/calcular-e-inserir-preco-total', async (req, res) => {
   const { nomeUsuario } = req.body;
-
   try {
     if (!nomeUsuario) {
       return res.status(400).json({ mensagem: 'Nome de usuário é obrigatório' });
     }
     await sqlClientes.calcularEinserirPrecoTotal(nomeUsuario);
-
     res.status(200).json({ mensagem: 'Preço total calculado e inserido com sucesso' });
   } catch (erro) {
     console.error(erro);
@@ -117,19 +113,19 @@ router.get('/historico-pedidos/:nomeUsuario', async (req, res) => {
   }
 });
 
-router.get("/selectLanches", function(req, res, next){ // http://localhost:3000/selectLanches
+router.get("/selectLanches", async function(req, res, next){ // http://localhost:3000/selectLanches
   sqlCardapiosEitens.selectLanches().then((result) =>{
     res.json(result[0]);
   });
 });
 
-router.get("/selectBebidas", function(req, res, next){ // http://localhost:3000/selectBebidas
+router.get("/selectBebidas", async function(req, res, next){ // http://localhost:3000/selectBebidas
   sqlCardapiosEitens.selectBebidas().then((result) =>{
     res.json(result[0]);
   });
 });
 
-router.get("/selectSobremesas", function(req, res, next){ // http://localhost:3000/selectSobremesas
+router.get("/selectSobremesas", async function(req, res, next){ // http://localhost:3000/selectSobremesas
   sqlCardapiosEitens.selectSobremesas().then((result) =>{
     res.json(result[0]);
   });
