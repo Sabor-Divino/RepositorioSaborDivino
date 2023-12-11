@@ -32,7 +32,7 @@ async function validarLogin(usuario, senha) {
     } catch (error) {
         console.error(error);
         return false;
-      } finally {
+    } finally {
         if (pool) {
         await pool.close();
       }
