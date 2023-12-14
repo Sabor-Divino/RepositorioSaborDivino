@@ -147,8 +147,8 @@ public class Interface {
 
     private List<Consulta> obterItensDeCardapioPorId(int idCardapio) {
         List<Consulta> Itens = new ArrayList<>();
-    
         String sql = "SELECT * FROM SabDiv.ItensDeCardapios WHERE IdCardapio = ?";
+
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setInt(1, idCardapio);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -169,7 +169,7 @@ public class Interface {
 
     private void adicionarItensATabela(List<Consulta> Itens, String nomeCardapio) {
         tableModel.addRow(new Object[]{"Itens do " + nomeCardapio});
-    
+
         for (Consulta consulta : Itens) {
             tableModel.addRow(consulta.toArray());
         }
@@ -190,7 +190,7 @@ public class Interface {
         adicionarItensATabela(bebidas, "Cardápio de Bebidas");
         adicionarItensATabela(sobremesas, "Cardápio de Sobremesas");
     }
-    
+
    private void abrirInserirItemDeCardapio() {
         JFrame inserirFrame = new JFrame("Adicionar item");
         inserirFrame.setBounds(100, 100, 400, 300);
