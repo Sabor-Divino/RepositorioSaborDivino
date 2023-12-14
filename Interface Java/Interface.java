@@ -7,12 +7,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class Interface { 
-
     private static final String JDBC_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     private static final String DB_URL = "jdbc:sqlserver://regulus.cotuca.unicamp.br:1433;databaseName=BD23331;trustServerCertificate=true";
     private static final String USER = "BD23331";
     private static final String PASS = "BD23331";
-
     private Connection conn;
     private JFrame frame;
     private JTextField userField;
@@ -147,6 +145,37 @@ public class Interface {
         }
     }
 
+    private List<Consulta> obterItensDeCardapioPorId(int idCardapio) {
+        List<Consulta> Itens = new ArrayList<>();
+    
+        String sql = "SELECT * FROM SabDiv.ItensDeCardapios WHERE IdCardapio = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setInt(1, idCardapio);
+            ResultSet resultSet = preparedStatement.executeQuery();
+    
+            while (resultSet.next()) {
+                int idItemDeCardapio = resultSet.getInt("IdItemDeCardapio");
+                String nomeItem = resultSet.getString("NomeItem");
+                double preco = resultSet.getDouble("Preco");
+                int idCardapioC = resultSet.getInt("IdCardapio");
+                Consulta consulta = new Consulta(idItemDeCardapio, nomeItem, preco, idCardapioC);
+                Itens.add(consulta);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Itens;
+    }
+
+    private void adicionarItensATabela(List<Consulta> Itens, String nomeCardapio) {
+        tableModel.addRow(new Object[]{"Itens do " + nomeCardapio});
+    
+        for (Consulta consulta : Itens) {
+            tableModel.addRow(consulta.toArray());
+        }
+        tableModel.addRow(new Object[]{});
+    }
+
     private void selectItens() {
         frame.getContentPane().getComponent(0).setVisible(false);
         frame.getContentPane().getComponent(1).setVisible(true);
@@ -162,41 +191,6 @@ public class Interface {
         adicionarItensATabela(sobremesas, "Cardápio de Sobremesas");
     }
     
-    private void adicionarItensATabela(List<Consulta> Itens, String nomeCardapio) {
-        tableModel.addRow(new Object[]{"Itens do " + nomeCardapio});
-    
-        for (Consulta consulta : Itens) {
-            tableModel.addRow(consulta.toArray());
-        }
-        tableModel.addRow(new Object[]{});
-    }
-    
-    
-    private List<Consulta> obterItensDeCardapioPorId(int idCardapio) {
-        List<Consulta> Itens = new ArrayList<>();
-    
-        String sql = "SELECT * FROM SabDiv.ItensDeCardapios WHERE IdCardapio = ?";
-    
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            preparedStatement.setInt(1, idCardapio);
-            ResultSet resultSet = preparedStatement.executeQuery();
-    
-            while (resultSet.next()) {
-                int IdItemDeCardapio = resultSet.getInt("IdItemDeCardapio");
-                String NomeItem = resultSet.getString("NomeItem");
-                double preco = resultSet.getDouble("Preco");
-                int IdCardapio = resultSet.getInt("IdCardapio");
-    
-                Consulta consulta = new Consulta(IdItemDeCardapio, NomeItem, preco, IdCardapio);
-                Itens.add(consulta);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    
-        return Itens;
-    }
-
    private void abrirInserirItemDeCardapio() {
         JFrame inserirFrame = new JFrame("Adicionar item");
         inserirFrame.setBounds(100, 100, 400, 300);
@@ -316,7 +310,6 @@ public class Interface {
     }
     
     
-    
     private void excluirItem(int idItemDeCardapio) {
         if (ItemExiste(String.valueOf(idItemDeCardapio))) {
             int opcao = JOptionPane.showConfirmDialog(frame, "Tem certeza que deseja excluir este item?", "Confirmação", JOptionPane.YES_NO_OPTION);
@@ -421,7 +414,4 @@ public class Interface {
         }
     }
     
-
-
-//fim
 }
